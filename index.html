@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sentiment Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Real Time Sentiment Analysis</h1>
+    <div class="container">
+      <div class="left">
+        <h2>Analyzing Sentiment During India's 2019 General Elections</h2>
+        <div class="content">
+          This project focuses on sentiment analysis of Twitter data related to
+          Narendra Modi, other political leaders, and public opinion surrounding
+          India's 2019 General Elections. By categorizing tweets as positive,
+          negative, or neutral, we aim to uncover key insights into voter
+          sentiment and political trends during the election season.
+        </div>
+        <div class="content">
+          <h3>About the Dataset</h3>
+          <ul>
+            <li>
+              <strong>Source:</strong> Tweets were extracted using the Tweepy
+              API.
+            </li>
+            <li>
+              <strong>Focus:</strong> Sentiment analysis of public opinions
+              about key political figures and the nation's next Prime Minister.
+            </li>
+            <li>
+              <strong>Labels:</strong>
+              <ul>
+                <li>&nbsp;&nbsp;<strong>1</strong>&nbsp;: Positive</li>
+                <li>&nbsp;<strong>0</strong>&nbsp;: Neutral</li>
+                <li><strong>-1</strong>&nbsp;: Negative</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Size:</strong> ~163k tweets, cleaned and labeled using
+              TextBlob and NLP techniques.
+            </li>
+          </ul>
+        </div>
+        <div class="content">
+          <h3>Objective</h3>
+          <p>
+            The analysis provides valuable insights into public opinion trends,
+            voter inclinations, and political sentiments during this critical
+            period.
+          </p>
+        </div>
+        <div class="content">
+          <h3>Model</h3>
+          <p>
+            The model leverages a <strong>Decision Tree classifier</strong> along with <strong>TFIDF vectorization</strong> to process and analyze the data. With an accuracy of <strong>82%</strong>, it delivers reliable predictions based on the input features.
+          </p>
+        </div>
+      </div>
+      <div class="bar"></div>
+      <div class="right">
+        <form id="sentimentForm">
+          <label for="tweet">Enter a tweet :</label>
+          <!-- <input type="text" id="tweet" name="tweet" required /> -->
+          <textarea id="tweet" name="tweet" rows="4" cols="50" required></textarea>
+          <button type="submit">Analyze</button>
+        </form>
+        <div id="result"></div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("sentimentForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const tweet = document.getElementById("tweet").value;
+          const response = await fetch("http://127.0.0.1:5000/predict", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ tweet }),
+          });
+          const result = await response.json();
+          const resultElement = document.getElementById("result");
+          resultElement.textContent = `${result.sentiment}`;
+
+          if (result.sentiment === "Positive") {
+            resultElement.style.color = "green";
+          } else if (result.sentiment === "Negative") {
+            resultElement.style.color = "red";
+          } else if (result.sentiment === "Neutral") {
+            resultElement.style.color = "#c1c349";
+          }
+        });
+    </script>
+  </body>
+</html>
